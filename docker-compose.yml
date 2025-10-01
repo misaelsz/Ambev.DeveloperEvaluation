@@ -1,9 +1,9 @@
-version: '3.8'
+
 
 services:
   ambev.developerevaluation.webapi:
     container_name: ambev_developer_evaluation_webapi
-    image: ${DOCKER_REGISTRY-}ambevdeveloperevaluationwebapi
+    image: misaelsz/ambev-api:1.0.0
     build:
       context: .
       dockerfile: src/Ambev.DeveloperEvaluation.WebApi/Dockerfile
