@@ -5,6 +5,8 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
 public class Sale : BaseEntity
 {
+    public string SaleNumber { get; set; } = string.Empty;
+
     public DateTime SaleDate { get; set; }
 
     public Guid CustomerId { get; set; }
@@ -128,7 +130,8 @@ public class Sale : BaseEntity
 
     public bool IsValid()
     {
-        return  CustomerId != Guid.Empty
+        return !string.IsNullOrEmpty(SaleNumber)
+            && CustomerId != Guid.Empty
             && BranchId != Guid.Empty
             && Items.Any()
             && Items.All(i => i.IsValid());
