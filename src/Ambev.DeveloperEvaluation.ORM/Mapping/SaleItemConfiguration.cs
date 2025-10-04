@@ -8,13 +8,7 @@ public class SaleItemConfiguration : IEntityTypeConfiguration<SaleItem>
 {
     public void Configure(EntityTypeBuilder<SaleItem> builder)
     {
-        builder.ToTable("SaleItems", t =>
-        {
-            // Add constraints using the new syntax
-            t.HasCheckConstraint("CK_SaleItem_Quantity", "\"Quantity\" > 0 AND \"Quantity\" <= 20");
-            t.HasCheckConstraint("CK_SaleItem_UnitPrice", "\"UnitPrice\" > 0");
-            t.HasCheckConstraint("CK_SaleItem_DiscountPercentage", "\"DiscountPercentage\" >= 0 AND \"DiscountPercentage\" <= 100");
-        });
+        builder.ToTable("SaleItems");
 
         builder.HasKey(si => si.Id);
         builder.Property(si => si.Id)
