@@ -74,29 +74,6 @@ public class SaleRepositoryTests
         await saleRepository.Received(1).GetBySaleNumberAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
-    [Fact(DisplayName = "Given valid id When getting sale with items Then returns sale with items loaded")]
-    public async Task GetByIdWithItemsAsync_ValidId_ReturnsSaleWithItemsLoaded()
-    {
-        var saleRepository = Substitute.For<ISaleRepository>();
-        var sale = SaleRepositoryTestData.GenerateValidSale();
-        var saleId = sale.Id;
-
-        saleRepository.GetByIdWithItemsAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
-            .Returns(sale);
-
-        var result = await saleRepository.GetByIdWithItemsAsync(saleId, CancellationToken.None);
-
-        result.Should().NotBeNull();
-        result!.Id.Should().Be(saleId);
-        result.SaleNumber.Should().Be(sale.SaleNumber);
-        result.CustomerName.Should().Be(sale.CustomerName);
-        result.BranchName.Should().Be(sale.BranchName);
-        result.TotalAmount.Should().Be(sale.TotalAmount);
-        result.Status.Should().Be(sale.Status);
-        result.Items.Should().NotBeNull();
-        await saleRepository.Received(1).GetByIdWithItemsAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
-    }
-
     [Fact(DisplayName = "Given valid sale When updating Then returns updated sale")]
     public async Task UpdateAsync_ValidSale_ReturnsUpdatedSale()
     {

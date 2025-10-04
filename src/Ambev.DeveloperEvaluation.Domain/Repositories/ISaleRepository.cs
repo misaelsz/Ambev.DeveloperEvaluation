@@ -10,8 +10,6 @@ public interface ISaleRepository
 
     Task<Sale?> GetBySaleNumberAsync(string saleNumber, CancellationToken cancellationToken = default);
 
-    Task<Sale?> GetByIdWithItemsAsync(Guid id, CancellationToken cancellationToken = default);
-
     Task<Sale> UpdateAsync(Sale sale, CancellationToken cancellationToken = default);
 
     Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
