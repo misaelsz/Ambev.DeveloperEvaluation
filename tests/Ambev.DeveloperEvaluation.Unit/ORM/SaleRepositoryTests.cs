@@ -117,4 +117,41 @@ public class SaleRepositoryTests
         result.Status.Should().Be(sale.Status);
         await saleRepository.Received(1).UpdateAsync(Arg.Any<Sale>(), Arg.Any<CancellationToken>());
     }
+
+    [Fact(DisplayName = "Given valid id When deleting Then returns true")]
+    public async Task DeleteAsync_ValidId_ReturnsTrue()
+    {
+        var saleRepository = Substitute.For<ISaleRepository>();
+        var saleId = Guid.NewGuid();
+
+        saleRepository.DeleteAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(true);
+
+        var result = await saleRepository.DeleteAsync(saleId, CancellationToken.None);
+
+        result.Should().BeTrue();
+        await saleRepository.Received(1).DeleteAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact(DisplayName = "Given valid page parameters When getting all sales Then returns sales list")]
+    public async Task GetAllAsync_ValidPageParameters_ReturnsSalesList()
+    {
+        var saleRepository = Substitute.For<ISaleRepository>();
+        var sales = new List<Sale>
+        {
+            SaleRepositoryTestData.GenerateValidSale(),
+            SaleRepositoryTestData.GenerateValidSale(),
+            SaleRepositoryTestData.GenerateValidSale()
+        };
+
+        saleRepository.GetAllAsync(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(sales);
+
+        var result = await saleRepository.GetAllAsync(1, 10, CancellationToken.None);
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(3);
+        result.Should().BeEquivalentTo(sales);
+        await saleRepository.Received(1).GetAllAsync(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
+    }
 }
