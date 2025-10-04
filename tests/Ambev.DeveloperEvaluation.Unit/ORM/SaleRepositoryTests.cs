@@ -1,0 +1,32 @@
+using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.Unit.ORM.TestData;
+using FluentAssertions;
+using NSubstitute;
+using Xunit;
+
+namespace Ambev.DeveloperEvaluation.Unit.ORM;
+
+public class SaleRepositoryTests
+{
+    [Fact(DisplayName = "Given valid sale When creating Then returns created sale")]
+    public async Task CreateAsync_ValidSale_ReturnsCreatedSale()
+    {
+        var saleRepository = Substitute.For<ISaleRepository>();
+        var sale = SaleRepositoryTestData.GenerateValidSale();
+
+        saleRepository.CreateAsync(Arg.Any<Sale>(), Arg.Any<CancellationToken>())
+            .Returns(sale);
+
+        var result = await saleRepository.CreateAsync(sale, CancellationToken.None);
+
+        result.Should().NotBeNull();
+        result.Id.Should().Be(sale.Id);
+        result.SaleNumber.Should().Be(sale.SaleNumber);
+        result.CustomerName.Should().Be(sale.CustomerName);
+        result.BranchName.Should().Be(sale.BranchName);
+        result.TotalAmount.Should().Be(sale.TotalAmount);
+        result.Status.Should().Be(sale.Status);
+        await saleRepository.Received(1).CreateAsync(Arg.Any<Sale>(), Arg.Any<CancellationToken>());
+    }
+}
