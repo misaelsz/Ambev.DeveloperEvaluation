@@ -29,4 +29,26 @@ public class SaleRepositoryTests
         result.Status.Should().Be(sale.Status);
         await saleRepository.Received(1).CreateAsync(Arg.Any<Sale>(), Arg.Any<CancellationToken>());
     }
+
+    [Fact(DisplayName = "Given valid id When getting sale Then returns found sale")]
+    public async Task GetByIdAsync_ValidId_ReturnsFoundSale()
+    {
+        var saleRepository = Substitute.For<ISaleRepository>();
+        var sale = SaleRepositoryTestData.GenerateValidSale();
+        var saleId = sale.Id;
+
+        saleRepository.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(sale);
+
+        var result = await saleRepository.GetByIdAsync(saleId, CancellationToken.None);
+
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(saleId);
+        result.SaleNumber.Should().Be(sale.SaleNumber);
+        result.CustomerName.Should().Be(sale.CustomerName);
+        result.BranchName.Should().Be(sale.BranchName);
+        result.TotalAmount.Should().Be(sale.TotalAmount);
+        result.Status.Should().Be(sale.Status);
+        await saleRepository.Received(1).GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+    }
 }
