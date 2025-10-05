@@ -30,5 +30,12 @@ public class CreateSaleValidator : AbstractValidator<CreateSaleCommand>
         RuleFor(x => x.BranchName)
             .NotEmpty()
             .MaximumLength(200);
+
+        RuleFor(x => x.Itens)
+            .NotEmpty()
+            .Must(items => items
+                .GroupBy(i => i.ProductId)
+                .All(g => g.Sum(i => i.Quantity) <= 20))
+            .WithMessage("A sale cannot have more than 20 units of the same product");
     }
 }

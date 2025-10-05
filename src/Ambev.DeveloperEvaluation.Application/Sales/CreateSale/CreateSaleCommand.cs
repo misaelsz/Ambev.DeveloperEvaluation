@@ -1,3 +1,4 @@
+using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Enums;
 using MediatR;
 
@@ -13,4 +14,5 @@ public class CreateSaleCommand : IRequest<CreateSaleResult>
     public Guid BranchId { get; set; }
     public string BranchName { get; set; } = string.Empty;
     public SaleStatus Status { get; set; }
+    public List<SaleItem> Itens { get; set; } = [];
 }

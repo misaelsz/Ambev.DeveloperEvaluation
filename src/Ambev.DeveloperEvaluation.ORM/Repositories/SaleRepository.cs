@@ -33,7 +33,7 @@ public class SaleRepository : ISaleRepository
     public async Task<Sale?> GetBySaleNumberAsync(string saleNumber, CancellationToken cancellationToken = default)
     {
         return await _context.Sales
-            .Include(s => s.Items)
+            .Include(s => s.Items).ThenInclude(i => i.Product)
             .Include(s => s.Customer)
             .Include(s => s.Branch)
             .FirstOrDefaultAsync(s => s.SaleNumber == saleNumber, cancellationToken);

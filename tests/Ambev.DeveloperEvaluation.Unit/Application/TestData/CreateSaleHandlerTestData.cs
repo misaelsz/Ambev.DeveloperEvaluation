@@ -15,7 +15,13 @@ public static class CreateSaleHandlerTestData
         .RuleFor(s => s.CustomerDocument, f => f.Random.Replace("###########"))
         .RuleFor(s => s.BranchId, f => f.Random.Guid())
         .RuleFor(s => s.BranchName, f => f.Company.CompanyName())
-        .RuleFor(s => s.Status, f => f.PickRandom<SaleStatus>());
+        .RuleFor(s => s.Status, f => f.PickRandom<SaleStatus>())
+        .RuleFor(s => s.Itens, f => f.Make(2, () => new SaleItem
+        {
+            ProductId = f.Random.Guid(),
+            Quantity = f.Random.Int(1, 5),
+            UnitPrice = f.Random.Decimal(10, 100)
+        }));
 
     private static readonly Faker<Sale> saleFaker = new Faker<Sale>()
         .RuleFor(s => s.Id, f => f.Random.Guid())
