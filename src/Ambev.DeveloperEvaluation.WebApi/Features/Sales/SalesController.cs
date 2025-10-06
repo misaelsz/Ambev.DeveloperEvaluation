@@ -8,6 +8,8 @@ using Ambev.DeveloperEvaluation.Application.Sales.GetById;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetById;
 using Ambev.DeveloperEvaluation.Application.Sales.GetAll;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetAll;
+using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales;
 
@@ -77,6 +79,24 @@ public class SalesController : ControllerBase
             CurrentPage = page,
             TotalPages = (int)Math.Ceiling((double)data.Count() / pageSize),
             TotalCount = data.Count()
+        });
+    }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(ApiResponseWithData<UpdateSaleResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateSaleRequest request, CancellationToken cancellationToken)
+    {
+        var command = _mapper.Map<UpdateSaleCommand>(request);
+        command.Id = id;
+
+        var result = await _mediator.Send(command, cancellationToken);
+
+        return Ok(new ApiResponseWithData<UpdateSaleResponse>
+        {
+            Success = true,
+            Message = "Sale updated successfully",
+            Data = _mapper.Map<UpdateSaleResponse>(result)
         });
     }
 }
