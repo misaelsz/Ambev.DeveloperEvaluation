@@ -1,9 +1,9 @@
-version: '3.8'
+
 
 services:
   ambev.developerevaluation.webapi:
     container_name: ambev_developer_evaluation_webapi
-    image: ${DOCKER_REGISTRY-}ambevdeveloperevaluationwebapi
+    image: misaelsz/ambev-api:1.0.0
     build:
       context: .
       dockerfile: src/Ambev.DeveloperEvaluation.WebApi/Dockerfile
@@ -12,8 +12,8 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
     ports:
-      - "8080"
-      - "8081"
+      - "8080:8080"
+      - "8081:8181"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
