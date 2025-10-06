@@ -50,7 +50,7 @@ public class GetBySaleNumberHandlerIntegrationTests : IDisposable
         _mapper = config.CreateMapper();
 
         _handler = new GetBySaleNumberHandler(_saleRepository, _mapper);
-        _createSaleHandler = new CreateSaleHandler(_saleRepository, _mapper);
+        _createSaleHandler = new CreateSaleHandler(_saleRepository, _mapper, _branchRepository, _customerRepository, _productRepository);
         _createBranchHandler = new CreateBranchHandler(_branchRepository, _mapper);
         _createCustomerHandler = new CreateCustomerHandler(_customerRepository, _mapper);
         _createProductHandler = new CreateProductHandler(_productRepository, _mapper);

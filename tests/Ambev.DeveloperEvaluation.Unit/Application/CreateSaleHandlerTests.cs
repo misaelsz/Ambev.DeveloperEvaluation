@@ -12,14 +12,20 @@ namespace Ambev.DeveloperEvaluation.Unit.Application;
 public class CreateSaleHandlerTests
 {
     private readonly ISaleRepository _saleRepository;
+    private readonly IBranchRepository _branchRepository;
+    private readonly ICustomerRepository _customerRepository;
+    private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
     private readonly CreateSaleHandler _handler;
 
     public CreateSaleHandlerTests()
     {
         _saleRepository = Substitute.For<ISaleRepository>();
+        _branchRepository = Substitute.For<IBranchRepository>();
+        _customerRepository = Substitute.For<ICustomerRepository>();
+        _productRepository = Substitute.For<IProductRepository>();
         _mapper = Substitute.For<IMapper>();
-        _handler = new CreateSaleHandler(_saleRepository, _mapper);
+        _handler = new CreateSaleHandler(_saleRepository, _mapper, _branchRepository, _customerRepository, _productRepository);
     }
 
     [Fact(DisplayName = "Given valid sale data When creating sale Then returns success response")]
@@ -28,6 +34,14 @@ public class CreateSaleHandlerTests
         var command = CreateSaleHandlerTestData.GenerateValidCommand();
         var sale = CreateSaleHandlerTestData.GenerateValidSale();
         var result = CreateSaleHandlerTestData.GenerateValidResult();
+
+        _branchRepository.GetByIdAsync(command.BranchId, Arg.Any<CancellationToken>())
+            .Returns(new Branch { Id = command.BranchId, Name = command.BranchName, Code = "BR01" });
+        _customerRepository.GetByIdAsync(command.CustomerId, Arg.Any<CancellationToken>())
+            .Returns(new Customer { Id = command.CustomerId, Name = command.CustomerName, Email = "a@a.com", Phone = "000", Document = command.CustomerDocument, Address = "addr" });
+        foreach (var pid in command.Itens.Select(i => i.ProductId).Distinct())
+            _productRepository.GetByIdAsync(pid, Arg.Any<CancellationToken>())
+                .Returns(new Product { Id = pid, Name = "P", Code = "C", Category = "Cat", Description = "D", UnitPrice = 1 });
 
         _mapper.Map<Sale>(command).Returns(sale);
         _mapper.Map<CreateSaleResult>(sale).Returns(result);
